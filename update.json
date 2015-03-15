@@ -1,5 +1,5 @@
 {
-    "version": 6,
-    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.06.apk",
-    "changelog": "Votes wird nun korrekt angezeigt, Kommentare können gevotet werden, viele Verbesserungen und deutsche Übersetzung."
+    "version": 7,
+    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.07.apk",
+    "changelog": "Viele OutOfMemory-Fehler behoben. Neue Features: Kommentare schreiben, Bilder herunterladen, Benisanzeige und pr0mium Farbpunkt."
 }
