@@ -1,5 +1,5 @@
 {
-    "version": 8,
-    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.08.apk",
-    "changelog": "Viele OutOfMemory-Fehler behoben (noch mehr!). Neue Features: Kommentare schreiben, Bilder herunterladen, Benisanzeige und pr0mium Farbpunkt."
+    "version": 9,
+    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.09.apk",
+    "changelog": "Fixes für die Abstürze. Tut mir leid. Speicherfehler sind leider auch immer noch da, könnte Hilfe gebrauchen. :/"
 }
