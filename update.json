@@ -1,5 +1,5 @@
 {
-    "version": 9,
-    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.09.apk",
-    "changelog": "Fixes für die Abstürze. Tut mir leid. Speicherfehler sind leider auch immer noch da, könnte Hilfe gebrauchen. :/"
+    "version": 10,
+    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.10.apk",
+    "changelog": "Hardwarebeschleunigung deaktiviert :/ Das sollte die Speicherfehler-Probleme beheben. Feedback an 'Mopsalarm' wäre super."
 }
