@@ -1,5 +1,5 @@
 {
-    "version": 15,
-    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.15.apk",
-    "changelog": "Musikwiedergabe wird nicht mehr beim Abspielen von Videos unterbrochen"
+    "version": 14,
+    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.14.apk",
+    "changelog": "Zoomfunktion, Tagvorschläge, neue Einstellungen und Bugfixes."
 }
