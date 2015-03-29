@@ -1,5 +1,5 @@
 {
-    "version": 17,
-    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.17.apk",
-    "changelog": "Feedback-Butto in den Einstellungen, Benutzernamen sind jetzt anklickbar und Lesezeichen (!!)."
+    "version": 18,
+    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.18.apk",
+    "changelog": "Beta-Kanal (siehe Einstellungen), viele Bugfixes (Zoom, Webm), App viel kleiner! Normale Updates kommen nun seltener - Beta-Updates kommen so schnell wie ich pr0grammieren kann."
 }
