@@ -1,5 +1,5 @@
 {
-    "version": 16,
-    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.16.apk",
-    "changelog": "Musikwiedergabe wird nicht mehr unterbrochen."
+    "version": 17,
+    "apk": "https://raw.githubusercontent.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.17.apk",
+    "changelog": "Feedback-Butto in den Einstellungen, Benutzernamen sind jetzt anklickbar und Lesezeichen (!!)."
 }
