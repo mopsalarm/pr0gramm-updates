@@ -1,5 +1,5 @@
 {
-    "version": 35,
-    "apk": "https://github.com/mopsalarm/pr0gramm-updates/raw/beta/pr0gramm-v1.35.apk",
-    "changelog": "HQ-Version von Bildern in der Zoomansicht, Vorschau bei Videos im Mobilnetz, Bugfixes"
+    "version": 36,
+    "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/master/pr0gramm-v1.36.apk",
+    "changelog": "Teilen, Material Icons, möglicherweise Samsung Bugfix"
 }
