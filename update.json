@@ -1,5 +1,5 @@
 {
-    "version": 37,
-    "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/pr0gramm-v1.37.apk",
-    "changelog": "Teilen, Material Icons, Samsung Bugfix"
+    "version": 39,
+    "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/pr0gramm-v1.39.apk",
+    "changelog": "Tags können in mehreren Zeilen angezeigt werden, neues Changelog und Bugfixes"
 }
