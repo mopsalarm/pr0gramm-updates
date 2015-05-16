@@ -1,5 +1,5 @@
 {
-    "version": 43,
-    "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/pr0gramm-v1.43.apk",
-    "changelog": "Erste Infos wenn man nach einem Benutzernamen sucht oder sich dessen Favs/Uploads anguckt."
+    "version": 44,
+    "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/pr0gramm-v1.44.apk",
+    "changelog": "Upload verbessert, Benutzerdetails werden nun angezeigt, mehr Platz bei den Tags."
 }
