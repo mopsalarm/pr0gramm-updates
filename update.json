@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.682.apk",
-  "versionStr": "1.68.2",
-  "version": 682,
-  "changelog": "Datum gefixt, Abstuerze behoben, Speicherprobleme auf alten Geraeten stark verringert, Benisgraph von anderen Benutzern"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.683.apk",
+  "versionStr": "1.68.3",
+  "version": 683,
+  "changelog": "Speicherprobleme auf alten Geraeten stark verringert, Benisgraph von anderen Benutzern"
 }
