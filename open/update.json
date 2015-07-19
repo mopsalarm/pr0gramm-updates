@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.680.apk",
-  "versionStr": "1.68.0",
-  "version": 680,
-  "changelog": "Speicherprobleme auf alten Geraeten angegangen, Benisgraph von anderen Benutzern"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.674.apk",
+  "versionStr": "1.67.4",
+  "version": 674,
+  "changelog": "Besserer Softwaredekoder, OP-Kommentare nach oben, Videos als Datei teilen, viele Bugfixes"
 }
