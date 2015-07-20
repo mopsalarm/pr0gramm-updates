@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.685.apk",
-  "versionStr": "1.68.5",
-  "version": 685,
-  "changelog": "Haeufige Abstuerze beim Bilderanschauen hoffentlich behoben (sorry!), Speicherprobleme auf alten Geraeten stark verringert, Benisgraph von anderen Benutzern"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.686.apk",
+  "versionStr": "1.68.6",
+  "version": 686,
+  "changelog": "Bug im Softwaredekoder behoben , Speicherprobleme auf alten Geraeten stark verringert, Benisgraph von anderen Benutzern"
 }
