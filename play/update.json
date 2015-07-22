@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/play/pr0gramm-v1.686.apk",
-  "versionStr": "1.68.6",
-  "version": 686,
-  "changelog": "Bug im Softwaredekoder behoben , Speicherprobleme auf alten Geraeten stark verringert, Benisgraph von anderen Benutzern"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/play/pr0gramm-v1.690.apk",
+  "versionStr": "1.69.0",
+  "version": 690,
+  "changelog": "Mit dem Neudesign des Nachrichten und Kommentareschreiben-Dialogs begonnen"
 }
