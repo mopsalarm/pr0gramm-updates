@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.693.apk",
-  "versionStr": "1.69.3",
-  "version": 693,
-  "changelog": "Redesign des Nachrichten und Kommentareschreiben-Dialogs"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.700.apk",
+  "versionStr": "1.70.0",
+  "version": 700,
+  "changelog": "Bugfix beim Antworten auf Kommentare aus der Inbox heraus"
 }
