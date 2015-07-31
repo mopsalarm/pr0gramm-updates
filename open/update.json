@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.700.apk",
-  "versionStr": "1.70.0",
-  "version": 700,
-  "changelog": "Bugfix beim Antworten auf Kommentare aus der Inbox heraus"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.701.apk",
+  "versionStr": "1.70.1",
+  "version": 701,
+  "changelog": "Bugfixes, u.a. beim Antworten auf Kommentare aus der Inbox heraus"
 }
