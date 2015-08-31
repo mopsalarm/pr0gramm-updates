@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.733.apk",
-  "versionStr": "1.73.3",
-  "version": 733,
-  "changelog": "Neue Kategorie 'Zufall' (+bugfix), Benachrichtigungen üBerarbeitet, außerdem Fortschrittsbalken und Preloading."
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.743.apk",
+  "versionStr": "1.74.3",
+  "version": 743,
+  "changelog": "Feedback-Funktion repariert, Neue 'Kontrovers'-Kategorie, Bugfixes und co"
 }
