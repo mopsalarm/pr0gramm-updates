@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/play/pr0gramm-v1.782.apk",
-  "versionStr": "1.78.2",
-  "version": 782,
-  "changelog": "Absturz beim Drehen gefixt, neuer Api-Proxy Modus fuer Probleme im WLAN"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/play/pr0gramm-v1.783.apk",
+  "versionStr": "1.78.3",
+  "version": 783,
+  "changelog": "Weitere kleine Bugfixes und App probeweise noch kleiner gemacht"
 }
