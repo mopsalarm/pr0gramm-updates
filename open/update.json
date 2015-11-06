@@ -1,6 +1,6 @@
 {
-  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.784.apk",
-  "versionStr": "1.78.4",
-  "version": 784,
-  "changelog": "Noch mehr Bugfixes - Stability for the win"
+  "apk": "https://cdn.rawgit.com/mopsalarm/pr0gramm-updates/beta/open/pr0gramm-v1.785.apk",
+  "versionStr": "1.78.5",
+  "version": 785,
+  "changelog": "Videofortschritt bei Loops ausgeblendet, App kleiner und schneller, neue Kompatibilitaetseinstellung gegen haeufige Netzwerkprobleme, Bugfixes und Stabilitaet verbessert"
 }
