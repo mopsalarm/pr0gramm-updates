@@ -63,7 +63,7 @@ render_view = functools.partial(bottle.jinja2_view,
                                 template_settings=template_settings)
 
 
-@bottle.get("/update-manager")
+@bottle.get("/update-manager/")
 @render_view("templates/index.html.j2")
 def req_index():
     versions = list(Version.select().order_by(Version.version.desc()))
@@ -75,7 +75,7 @@ def req_post_notice(version_code):
     version = Version.get(version=version_code)
     version.notice = bottle.request.forms.getunicode("notice")
     version.save()
-    return bottle.redirect("/update-manager")
+    return bottle.redirect("/update-manager/")
 
 
 @bottle.get("/update-manager/version/<version_code:int>/set/stable")
@@ -86,7 +86,7 @@ def req_version_set_stable(version_code):
     version.stable = True
     version.save()
 
-    return bottle.redirect("/update-manager")
+    return bottle.redirect("/update-manager/")
 
 
 @bottle.get("/update-manager/version/<version_code:int>/set/beta")
@@ -97,7 +97,7 @@ def req_version_set_stable(version_code):
     version.beta = True
     version.save()
 
-    return bottle.redirect("/update-manager")
+    return bottle.redirect("/update-manager/")
 
 
 def update_json(*query):
@@ -138,7 +138,7 @@ def req_upload():
                    created=datetime.datetime.utcnow(),
                    filename=target_name)
 
-    return bottle.redirect("/update-manager")
+    return bottle.redirect("/update-manager/")
 
 
 def extract_version_code(fp):
