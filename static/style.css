@@ -1,0 +1,12 @@
+h2 {
+    margin-top: 2em;
+}
+
+table input[name="notice"] {
+    display: block;
+    width: 100%;
+}
+
+table th, table td {
+    white-space: nowrap;
+}

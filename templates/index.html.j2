@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8" />
+
+    <title>Update Manager</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw=="
+          crossorigin="anonymous"/>
+
+    <link href="/update-manager/static/style.css" rel="stylesheet"/>
+</head>
+
+<body>
+<div class="container">
+    <h1>Update manager</h1>
+
+    <h2>Available versions</h2>
+
+    <table class="table table-striped">
+        <tr>
+            <th style="width: 1em;">Version</th>
+            <th style="width: 1em;">Created</th>
+            <th style="width: 1em;">Actions</th>
+            <th>Notice</th>
+        </tr>
+        {% for version in versions %}
+            {% set classes %}
+                {{ "success" if version.stable }}
+                {{ "warning" if version.beta and not version.stable }}
+            {% endset %}
+
+            <tr class="{{ classes|replace('\n', ' ')|trim }}">
+                <td>{{ version.version|version_format }}</td>
+                <td>{{ version.created|humanize }}</td>
+                <td>
+                    <a href="/update-manager/version/{{ version.version }}/set/stable">St</a>
+                    <a href="/update-manager/version/{{ version.version }}/set/beta">Be</a>
+                </td>
+                <td>
+                    <form action="/update-manager/version/{{ version.version }}/notice" method="POST">
+                        <input name="notice" {{ {'value':version.notice}|xmlattr }} />
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>update.json files</h2>
+    <ul>
+        <li><a href="/stable/update.json">/stable/update.json</a></li>
+        <li><a href="/beta/update.json">/beta/update.json</a></li>
+    </ul>
+
+    <h2>Upload new version</h2>
+    <form action="/update-manager/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="apk"/>
+        <input type="submit" value="Upload apk"/>
+    </form>
+</div>
+</body>
+</html>

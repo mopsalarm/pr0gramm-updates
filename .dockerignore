@@ -1,0 +1,5 @@
+apks/*
+.idea/*
+Dockerfile
+.dockerignore
+*.iml

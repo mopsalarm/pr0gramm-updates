@@ -1,0 +1,6 @@
+/apks
+.venv
+*.iml
+/.idea
+__pycache__
+*.pyc
