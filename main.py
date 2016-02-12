@@ -11,7 +11,7 @@ import bottle
 import bottle_peewee
 import peewee as pw
 
-DOMAIN = "https://app.pr0gramm.com"
+DOMAIN = "http://app.pr0gramm.com"
 
 # create and install database plugin
 db = bottle_peewee.PeeweePlugin("sqlite:///apks/_updates.db")
