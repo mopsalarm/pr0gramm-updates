@@ -26,6 +26,13 @@ class Version(pw.Model):
     beta = pw.BooleanField(default=False)
     notice = pw.TextField()
 
+    @property
+    def size(self):
+        try:
+            return (apk_root / self.filename).stat().st_size
+        except OSError:
+            return -1
+
     class Meta(object):
         database = db.proxy
 

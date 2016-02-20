@@ -23,6 +23,7 @@
         <tr>
             <th style="width: 1em;">Version</th>
             <th style="width: 1em;">Created</th>
+            <th style="width: 1em;">Size</th>
             <th style="width: 1em;">Actions</th>
             <th>Notice</th>
         </tr>
@@ -35,6 +36,7 @@
             <tr class="{{ classes|replace('\n', ' ')|trim }}">
                 <td>{{ version.version|version_format }}</td>
                 <td>{{ version.created|humanize }}</td>
+                <td>{{ version.size|filesizeformat }}</td>
                 <td>
                     <a href="/update-manager/version/{{ version.version }}/set/stable">St</a>
                     <a href="/update-manager/version/{{ version.version }}/set/beta">Be</a>
