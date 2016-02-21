@@ -40,6 +40,9 @@ class Version(pw.Model):
 # create table for database plugin
 db.database.create_tables([Version], safe=True)
 
+# we just keep this in memory
+info_message_string = None
+
 # create apk folder
 apk_root = pathlib.Path("apks")
 if not apk_root.exists():
@@ -74,7 +77,7 @@ render_view = functools.partial(bottle.jinja2_view,
 @render_view("templates/index.html.j2")
 def req_index():
     versions = list(Version.select().order_by(Version.version.desc()))
-    return {"versions": versions}
+    return {"versions": versions, "info_message": info_message_string}
 
 
 @bottle.post("/update-manager/version/<version_code:int>/notice")
@@ -104,6 +107,13 @@ def req_version_set_stable(version_code):
     version.beta = True
     version.save()
 
+    return bottle.redirect("/update-manager/")
+
+
+@bottle.post("/update-manager/info-message")
+def req_set_info_message():
+    global info_message_string
+    info_message_string = bottle.request.forms.getunicode("message")
     return bottle.redirect("/update-manager/")
 
 
@@ -191,3 +201,8 @@ def req_apk(version_code):
             root=str(apk_root),
             download=True,
             mimetype="application/vnd.android.package-archive")
+
+
+@bottle.get("/info-message.json")
+def req_info_message():
+    return {"message": info_message_string}

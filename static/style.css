@@ -2,7 +2,7 @@ h2 {
     margin-top: 2em;
 }
 
-table input[name="notice"] {
+.input--fullwidth {
     display: block;
     width: 100%;
 }

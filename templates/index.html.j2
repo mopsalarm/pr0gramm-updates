@@ -17,6 +17,22 @@
 <div class="container">
     <h1>Update manager</h1>
 
+    <h2>Info message</h2>
+    <form action="/update-manager/info-message" method="POST">
+        <p>
+            Write a short message here to dispaly to all users. The message is displayed every time the
+            user openes the app.
+        </p>
+        <p>
+            Keep this text field emtpy to not show any message to the user.
+        </p>
+
+        <p><input name="message" class="input--fullwidth" {{ {'value':info_message}|xmlattr }} /></p>
+
+        <p>See generated file <a href="/info-message.json">here</a></p>
+
+    </form>
+
     <h2>Available versions</h2>
 
     <table class="table table-striped">
@@ -43,14 +59,14 @@
                 </td>
                 <td>
                     <form action="/update-manager/version/{{ version.version }}/notice" method="POST">
-                        <input name="notice" {{ {'value':version.notice}|xmlattr }} />
+                        <input name="notice" class="input--fullwidth" {{ {'value':version.notice}|xmlattr }} />
                     </form>
                 </td>
             </tr>
         {% endfor %}
     </table>
 
-    <h2>update.json files</h2>
+    <h2>Generated update.json file</h2>
     <ul>
         <li><a href="/stable/update.json">/stable/update.json</a></li>
         <li><a href="/beta/update.json">/beta/update.json</a></li>
