@@ -221,4 +221,5 @@ def req_info_message():
                                "GEH VERDAMMT NOCHMAL UPDATEN! " \
                                "Es gibt viele Bugfixes und neue Features!"
 
+    bottle.response.set_header("Vary", "User-Agent")
     return {"message": info_message}
