@@ -197,12 +197,28 @@ def req_apk_stable():
 def req_apk(version_code):
     version = Version.get(version=version_code)
     return bottle.static_file(
-            version.filename,
-            root=str(apk_root),
-            download=True,
-            mimetype="application/vnd.android.package-archive")
+        version.filename,
+        root=str(apk_root),
+        download=True,
+        mimetype="application/vnd.android.package-archive")
 
 
 @bottle.get("/info-message.json")
 def req_info_message():
-    return {"message": info_message_string}
+    # get static message
+    info_message = info_message_string
+
+    agent = bottle.request.get_header("User-Agent", "")
+    match = re.match(r"pr0gramm-app/v([0-9]+)", agent)
+    if match is not None:
+        version = int(match.group(1)) // 10
+        newest_version = Version.get(stable=True).version // 10
+        if version <= newest_version - 2:
+            if info_message:
+                info_message += ", außerdem: GEH VERDAMMT NOCHMAL UPDATEN!"
+            else:
+                info_message = "ACHTUNG: Deine Version ist verdammt alt. " \
+                               "GEH VERDAMMT NOCHMAL UPDATEN! " \
+                               "Es gibt viele Bugfixes und neue Features!"
+
+    return {"message": info_message}
