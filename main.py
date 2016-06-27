@@ -217,9 +217,9 @@ def req_info_message():
             if info_message:
                 info_message += ", außerdem: GEH VERDAMMT NOCHMAL UPDATEN!"
             else:
-                info_message = "ACHTUNG: Deine Version ist verdammt alt. " \
-                               "GEH VERDAMMT NOCHMAL UPDATEN! " \
-                               "Es gibt viele Bugfixes und neue Features!"
+                info_message = "ACHTUNG: Deine Version ist ziemlich alt. " \
+                               "Gehe bitte unbedingt updaten, da deine Version sonst bald nicht mehr unterstützt wird! " \
+                               "Zusätzlich gibt es viele Bugfixes und neue Features!"
 
     bottle.response.set_header("Vary", "User-Agent")
     return {"message": info_message}
