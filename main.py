@@ -174,15 +174,15 @@ def req_upload():
         # get the version_code from the zip file
         version_code = extract_version_code(upload_file)
 
-    # check if this version already exists
-    if Version.filter(version=version_code).exists():
-        raise IOError("Version {} already exists!".format(version_code))
+        # check if this version already exists
+        if Version.filter(version=version_code).exists():
+            raise IOError("Version {} already exists!".format(version_code))
 
-    # write the apk file to disk
-    upload.file.seek(0)
-    target_name = "pr0gramm-{}.apk".format(format_version(version_code))
-    with (apk_root / target_name).open("wb") as out:
-        upload.save(out)
+        # write the apk file to disk
+        upload.file.seek(0)
+        target_name = "pr0gramm-{}.apk".format(format_version(version_code))
+        with (apk_root / target_name).open("wb") as out:
+            upload.save(out)
 
     # store the new entry in the database
     Version.create(version=version_code,
