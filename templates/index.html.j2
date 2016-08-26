@@ -66,10 +66,17 @@
         {% endfor %}
     </table>
 
+    <h2 id="base-config">Base config</h2>
+    <form action="/update-manager/app-config" method="POST">
+        <textarea name="json">{{ base_config }}</textarea>
+        <input type="submit" value="Update config"/>
+    </form>
+
     <h2>Generated update.json file</h2>
     <ul>
         <li><a href="/stable/update.json">/stable/update.json</a></li>
         <li><a href="/beta/update.json">/beta/update.json</a></li>
+        <li><a href="/app-config/1085/config.json">/app-config/1085/config.json</a></li>
     </ul>
 
     <h2>Upload new version</h2>

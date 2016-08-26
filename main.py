@@ -1,5 +1,6 @@
 import datetime
 import functools
+import json
 import os
 import pathlib
 import re
@@ -37,8 +38,19 @@ class Version(pw.Model):
         database = db.proxy
 
 
+class Config(pw.Model):
+    version = pw.PrimaryKeyField(unique=True, db_column="id")
+    json = pw.TextField(default="{}")
+
+    class Meta(object):
+        database = db.proxy
+
+
 # create table for database plugin
-db.database.create_tables([Version], safe=True)
+db.database.create_tables([Version, Config], safe=True)
+
+# create the default config value
+Config.get_or_create(version=0)
 
 # we just keep this in memory
 info_message_string = None
@@ -77,7 +89,12 @@ render_view = functools.partial(bottle.jinja2_view,
 @render_view("templates/index.html.j2")
 def req_index():
     versions = list(Version.select().order_by(Version.version.desc()))
-    return {"versions": versions, "info_message": info_message_string}
+    base_config = json.dumps(config_get(version_code=0), indent=2, sort_keys=True)
+    return {
+        "versions": versions,
+        "info_message": info_message_string,
+        "base_config": base_config
+    }
 
 
 @bottle.post("/update-manager/version/<version_code:int>/notice")
@@ -117,6 +134,24 @@ def req_set_info_message():
     return bottle.redirect("/update-manager/")
 
 
+@bottle.get("/app-config/<version_code:int>/config.json")
+def config_get(version_code):
+    config = json.loads(Config.get(version=0).json)
+
+    # mix in more specific config
+    for specific in Config.select().where(Config.version == version_code):
+        config.update(json.loads(specific.json))
+
+    return config
+
+
+@bottle.post("/update-manager/app-config")
+def update_base_config():
+    parsed = json.loads(bottle.request.forms["json"])
+    Config(version=0, json=json.dumps(parsed)).save()
+    return bottle.redirect("/update-manager/#base-config")
+
+
 def update_json(*query):
     version = Version.get(*query)
     return {
@@ -139,15 +174,15 @@ def req_upload():
         # get the version_code from the zip file
         version_code = extract_version_code(upload_file)
 
-        # check if this version already exists
-        if Version.filter(version=version_code).exists():
-            raise IOError("Version {} already exists!".format(version_code))
+    # check if this version already exists
+    if Version.filter(version=version_code).exists():
+        raise IOError("Version {} already exists!".format(version_code))
 
-        # write the apk file to disk
-        upload.file.seek(0)
-        target_name = "pr0gramm-{}.apk".format(format_version(version_code))
-        with (apk_root / target_name).open("wb") as out:
-            upload.save(out)
+    # write the apk file to disk
+    upload.file.seek(0)
+    target_name = "pr0gramm-{}.apk".format(format_version(version_code))
+    with (apk_root / target_name).open("wb") as out:
+        upload.save(out)
 
     # store the new entry in the database
     Version.create(version=version_code,
