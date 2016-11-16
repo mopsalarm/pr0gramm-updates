@@ -2,6 +2,15 @@ h2 {
     margin-top: 2em;
 }
 
+body, input {
+    font-family: 'Lato', sans-serif;
+}
+
+textarea {
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 0.9em;
+}
+
 .input--fullwidth {
     display: block;
     width: 100%;
@@ -13,5 +22,13 @@ table th, table td {
 
 textarea {
     width: 100%;
-    height: 10em;
+    height: 15em;
+}
+
+[data-collapse-button] {
+    cursor: pointer;
+}
+
+[data-collapse-button] + form {
+    display: none;
 }

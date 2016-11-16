@@ -10,6 +10,9 @@
           integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw=="
           crossorigin="anonymous"/>
 
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+
     <link href="/update-manager/static/style.css" rel="stylesheet"/>
 </head>
 
@@ -68,9 +71,24 @@
 
     <h2 id="base-config">Base config</h2>
     <form action="/update-manager/app-config" method="POST">
+        <p>
+            Write config to version:
+            <input id="#configTargetVersion" name="version" value="0">
+            <a href="javascript:void(document.querySelector('#configTargetVersion').value='{{ most_recent_version }}');">(most recent)</a>
+        </p>
         <textarea name="json">{{ base_config }}</textarea>
         <input type="submit" value="Update config"/>
     </form>
+
+    {% for config in configs %}
+        <h3 data-collapse-button id="config-{{ config.version }}">Override for version {{ config.version }}</h3>
+        <form action="/update-manager/app-config" method="POST">
+            <input type="hidden" name="version" value="{{ config.version }}">
+            <textarea name="json">{{ config.json }}</textarea>
+            <input type="submit" value="Update config"/>
+        </form>
+    {% endfor %}
+
 
     <h2>Generated update.json file</h2>
     <ul>
@@ -85,5 +103,15 @@
         <input type="submit" value="Upload apk"/>
     </form>
 </div>
+
+<script>
+    document.querySelectorAll("[data-collapse-button]").forEach(function (header) {
+        header.addEventListener("click", function() {
+            var display = header.nextElementSibling.style.display;
+            header.nextElementSibling.style.display = display === "block" ? "none" : "block";
+        })
+    });
+</script>
+
 </body>
 </html>

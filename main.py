@@ -1,16 +1,18 @@
+#!/usr/bin/env python3
+
 import datetime
-import functools
 import json
-import os
 import pathlib
-import re
 import zipfile
 from contextlib import closing
 
 import arrow
 import bottle
 import bottle_peewee
+import functools
+import os
 import peewee as pw
+import re
 
 DOMAIN = "http://app.pr0gramm.com"
 
@@ -88,12 +90,21 @@ render_view = functools.partial(bottle.jinja2_view,
 @bottle.get("/update-manager/")
 @render_view("templates/index.html.j2")
 def req_index():
-    versions = list(Version.select().order_by(Version.version.desc()))
+    versions = list(Version.select().order_by(Version.version.desc()).limit(16))
+    most_recent_version = next((v.version for v in versions), 0)
+
     base_config = json.dumps(config_get(version_code=0), indent=2, sort_keys=True)
+    configs = list(Config.select().filter(Config.version != 0).order_by(Config.version.asc()))
+
+    for config in configs:
+        config.json = json.dumps(json.loads(config.json), indent=2, sort_keys=True)
+
     return {
         "versions": versions,
         "info_message": info_message_string,
-        "base_config": base_config
+        "base_config": base_config,
+        "most_recent_version": most_recent_version,
+        "configs": configs,
     }
 
 
@@ -146,10 +157,17 @@ def config_get(version_code):
 
 
 @bottle.post("/update-manager/app-config")
-def update_base_config():
+def update_config():
+    version = int(bottle.request.forms["version"])
     parsed = json.loads(bottle.request.forms["json"])
-    Config(version=0, json=json.dumps(parsed)).save()
-    return bottle.redirect("/update-manager/#base-config")
+
+    # update in db
+    config, _ = Config.get_or_create(version=version)
+    config.json = json.dumps(parsed)
+    config.save()
+
+    hash = "config-%d" % version if version else "base-config"
+    return bottle.redirect("/update-manager/#" + hash)
 
 
 def update_json(*query):
