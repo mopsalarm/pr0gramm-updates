@@ -40,19 +40,8 @@ class Version(pw.Model):
         database = db.proxy
 
 
-class Config(pw.Model):
-    version = pw.PrimaryKeyField(unique=True, db_column="id")
-    json = pw.TextField(default="{}")
-
-    class Meta(object):
-        database = db.proxy
-
-
 # create table for database plugin
-db.database.create_tables([Version, Config], safe=True)
-
-# create the default config value
-Config.get_or_create(version=0)
+db.database.create_tables([Version], safe=True)
 
 # we just keep this in memory
 info_message_string = None
@@ -93,18 +82,10 @@ def req_index():
     versions = list(Version.select().order_by(Version.version.desc()).limit(16))
     most_recent_version = next((v.version for v in versions), 0)
 
-    base_config = json.dumps(config_get(version_code=0), indent=2, sort_keys=True)
-    configs = list(Config.select().filter(Config.version != 0).order_by(Config.version.asc()))
-
-    for config in configs:
-        config.json = json.dumps(json.loads(config.json), indent=2, sort_keys=True)
-
     return {
         "versions": versions,
         "info_message": info_message_string,
-        "base_config": base_config,
         "most_recent_version": most_recent_version,
-        "configs": configs,
     }
 
 
@@ -143,32 +124,6 @@ def req_set_info_message():
     global info_message_string
     info_message_string = bottle.request.forms.getunicode("message")
     return bottle.redirect("/update-manager/")
-
-
-@bottle.get("/app-config/<version_code:int>/config.json")
-def config_get(version_code):
-    config = json.loads(Config.get(version=0).json)
-
-    # mix in more specific config
-    for specific in Config.select().where(Config.version == version_code):
-        config.update(json.loads(specific.json))
-
-    return config
-
-
-@bottle.post("/update-manager/app-config")
-def update_config():
-    version = int(bottle.request.forms["version"])
-    parsed = json.loads(bottle.request.forms["json"])
-
-    # update in db
-    config, _ = Config.get_or_create(version=version)
-    config.json = json.dumps(parsed)
-    config.save()
-
-    hash = "config-%d" % version if version else "base-config"
-    return bottle.redirect("/update-manager/#" + hash)
-
 
 def update_json(*query):
     version = Version.get(*query)
