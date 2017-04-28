@@ -1,5 +1,4 @@
-apks/*
-.idea/*
-Dockerfile
-.dockerignore
+apks
+.idea
 *.iml
+.git
