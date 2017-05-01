@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 
 import datetime
-import json
 import pathlib
+import threading
 import zipfile
 from contextlib import closing
 
 import arrow
 import bottle
 import bottle_peewee
+import cachetools as cachetools
 import functools
 import os
 import peewee as pw
+import requests
 import re
 
 DOMAIN = "http://app.pr0gramm.com"
@@ -58,6 +60,14 @@ def format_version(version):
 
     major, minor, path = (version // 1000) + 1, version // 10, version % 10
     return "{}.{}.{}".format(major, minor, path)
+
+
+def github_url_for_version(version):
+    if isinstance(version, Version):
+        version = version.version
+
+    major, minor, path = (version // 1000), version // 10, version % 10
+    return "https://github.com/mopsalarm/Pr0/releases/download/{}.{}.{}/app-release.apk".format(major, minor, path)
 
 
 def jinja_filters():
@@ -125,10 +135,33 @@ def req_set_info_message():
     info_message_string = bottle.request.forms.getunicode("message")
     return bottle.redirect("/update-manager/")
 
+
+urlcache = cachetools.TTLCache(maxsize=16, ttl=600)
+
+@cachetools.cached(urlcache, lock=threading.RLock())
+def validate_apk_url(url):
+    try:
+        print(url)
+        resp = requests.get(url, headers={'Range': 'bytes=0-128'})
+        print(resp.status_code)
+        return resp.status_code == 206
+
+    except Exception as err:
+        print("Could not validate url: ", err)
+        return False
+
+
+
+
 def update_json(*query):
     version = Version.get(*query)
+
+    url = github_url_for_version(version)
+    if not validate_apk_url(url):
+        url = "{}/apk/{}/{}".format(DOMAIN, version.version, version.filename)
+
     return {
-        "apk": "{}/apk/{}/{}".format(DOMAIN, version.version, version.filename),
+        "apk": url,
         "version": version.version,
         "versionStr": format_version(version),
         "changelog": version.notice
