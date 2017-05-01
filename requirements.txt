@@ -4,6 +4,8 @@ MarkupSafe==0.23
 arrow==0.7.0
 bottle==0.12.9
 bottle-peewee==0.1.5
+cachetools==2.0.0
 peewee==2.8.0
 python-dateutil==2.4.2
+requests==2.13.0
 six==1.10.0
