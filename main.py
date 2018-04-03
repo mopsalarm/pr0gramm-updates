@@ -13,8 +13,8 @@ import cachetools as cachetools
 import functools
 import os
 import peewee as pw
-import requests
 import re
+import requests
 
 DOMAIN = "http://app.pr0gramm.com"
 
@@ -138,6 +138,7 @@ def req_set_info_message():
 
 urlcache = cachetools.TTLCache(maxsize=16, ttl=600)
 
+
 @cachetools.cached(urlcache, lock=threading.RLock())
 def validate_apk_url(url):
     try:
@@ -151,14 +152,12 @@ def validate_apk_url(url):
         return False
 
 
-
-
 def update_json(*query):
     version = Version.get(*query)
 
-    url = github_url_for_version(version)
-    if not validate_apk_url(url):
-        url = "{}/apk/{}/{}".format(DOMAIN, version.version, version.filename)
+    # url = github_url_for_version(version)
+    # if not validate_apk_url(url):
+    url = "{}/apk/{}/{}".format("http://pr0.wibbly-wobbly.de", version.version, version.filename)
 
     return {
         "apk": url,
@@ -256,11 +255,11 @@ def req_info_message():
         newest_version = Version.get(stable=True).version // 10
         if version <= newest_version - 2:
             if info_message:
-                info_message += ", außerdem: GEH VERDAMMT NOCHMAL UPDATEN!"
+                info_message += ". Warum updatest du die App nicht? Gib doch mal bitte Feedback."
             else:
                 info_message = "ACHTUNG: Deine Version ist ziemlich alt. " \
                                "Gehe bitte unbedingt updaten, da deine Version sonst bald nicht mehr unterstützt wird! " \
-                               "Zusätzlich gibt es viele Bugfixes und neue Features!"
+                               "Zusätzlich gibt es viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback."
 
     bottle.response.set_header("Vary", "User-Agent")
     return {"message": info_message}

@@ -1,10 +1,12 @@
-FROM python:3.6-alpine
+FROM python:3.7-rc-alpine
 MAINTAINER Mopsalarm
 
 EXPOSE 8080
 
-COPY . /app
+COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
+
+COPY . /app
 
 WORKDIR /app
 
