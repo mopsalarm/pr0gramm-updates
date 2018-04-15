@@ -248,10 +248,9 @@ def req_info_message():
     # get static message
     info_message = info_message_string
 
-    agent = bottle.request.get_header("User-Agent", "")
-    match = re.match(r"pr0gramm-app/v([0-9]+)", agent)
-    if match is not None:
-        version = int(match.group(1)) // 10
+    version = extract_version_from_request(bottle.request)
+    if version is not None:
+        version = version // 10
         newest_version = Version.get(stable=True).version // 10
         if version <= newest_version - 2:
             if info_message:
@@ -263,3 +262,12 @@ def req_info_message():
 
     bottle.response.set_header("Vary", "User-Agent")
     return {"message": info_message, "endOfLife": 1369}
+
+
+def extract_version_from_request(request):
+    agent = request.get_header("User-Agent", "")
+    match = re.match(r"pr0gramm-app/v([0-9]+)", agent)
+    if match is None:
+        return None
+
+    return int(match.group(1))
