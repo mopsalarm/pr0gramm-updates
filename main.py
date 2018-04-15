@@ -1,16 +1,20 @@
+#!/usr/bin/env python3
+
 import datetime
-import functools
-import json
-import os
 import pathlib
-import re
+import threading
 import zipfile
 from contextlib import closing
 
 import arrow
 import bottle
 import bottle_peewee
+import cachetools as cachetools
+import functools
+import os
 import peewee as pw
+import re
+import requests
 
 DOMAIN = "http://app.pr0gramm.com"
 
@@ -38,19 +42,8 @@ class Version(pw.Model):
         database = db.proxy
 
 
-class Config(pw.Model):
-    version = pw.PrimaryKeyField(unique=True, db_column="id")
-    json = pw.TextField(default="{}")
-
-    class Meta(object):
-        database = db.proxy
-
-
 # create table for database plugin
-db.database.create_tables([Version, Config], safe=True)
-
-# create the default config value
-Config.get_or_create(version=0)
+db.database.create_tables([Version], safe=True)
 
 # we just keep this in memory
 info_message_string = None
@@ -67,6 +60,14 @@ def format_version(version):
 
     major, minor, path = (version // 1000) + 1, version // 10, version % 10
     return "{}.{}.{}".format(major, minor, path)
+
+
+def github_url_for_version(version):
+    if isinstance(version, Version):
+        version = version.version
+
+    major, minor, path = (version // 1000), version // 10, version % 10
+    return "https://github.com/mopsalarm/Pr0/releases/download/{}.{}.{}/app-release.apk".format(major, minor, path)
 
 
 def jinja_filters():
@@ -88,12 +89,13 @@ render_view = functools.partial(bottle.jinja2_view,
 @bottle.get("/update-manager/")
 @render_view("templates/index.html.j2")
 def req_index():
-    versions = list(Version.select().order_by(Version.version.desc()))
-    base_config = json.dumps(config_get(version_code=0), indent=2, sort_keys=True)
+    versions = list(Version.select().order_by(Version.version.desc()).limit(16))
+    most_recent_version = next((v.version for v in versions), 0)
+
     return {
         "versions": versions,
         "info_message": info_message_string,
-        "base_config": base_config
+        "most_recent_version": most_recent_version,
     }
 
 
@@ -134,28 +136,31 @@ def req_set_info_message():
     return bottle.redirect("/update-manager/")
 
 
-@bottle.get("/app-config/<version_code:int>/config.json")
-def config_get(version_code):
-    config = json.loads(Config.get(version=0).json)
-
-    # mix in more specific config
-    for specific in Config.select().where(Config.version == version_code):
-        config.update(json.loads(specific.json))
-
-    return config
+urlcache = cachetools.TTLCache(maxsize=16, ttl=600)
 
 
-@bottle.post("/update-manager/app-config")
-def update_base_config():
-    parsed = json.loads(bottle.request.forms["json"])
-    Config(version=0, json=json.dumps(parsed)).save()
-    return bottle.redirect("/update-manager/#base-config")
+@cachetools.cached(urlcache, lock=threading.RLock())
+def validate_apk_url(url):
+    try:
+        print(url)
+        resp = requests.get(url, headers={'Range': 'bytes=0-128'})
+        print(resp.status_code)
+        return resp.status_code == 206
+
+    except Exception as err:
+        print("Could not validate url: ", err)
+        return False
 
 
 def update_json(*query):
     version = Version.get(*query)
+
+    # url = github_url_for_version(version)
+    # if not validate_apk_url(url):
+    url = "{}/apk/{}/{}".format("http://pr0-app.wibbly-wobbly.de", version.version, version.filename)
+
     return {
-        "apk": "{}/apk/{}/{}".format(DOMAIN, version.version, version.filename),
+        "apk": url,
         "version": version.version,
         "versionStr": format_version(version),
         "changelog": version.notice
@@ -250,11 +255,11 @@ def req_info_message():
         newest_version = Version.get(stable=True).version // 10
         if version <= newest_version - 2:
             if info_message:
-                info_message += ", außerdem: GEH VERDAMMT NOCHMAL UPDATEN!"
+                info_message += ". Warum updatest du die App nicht? Gib doch mal bitte Feedback."
             else:
                 info_message = "ACHTUNG: Deine Version ist ziemlich alt. " \
                                "Gehe bitte unbedingt updaten, da deine Version sonst bald nicht mehr unterstützt wird! " \
-                               "Zusätzlich gibt es viele Bugfixes und neue Features!"
+                               "Zusätzlich gibt es viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback."
 
     bottle.response.set_header("Vary", "User-Agent")
-    return {"message": info_message}
+    return {"message": info_message, "endOfLife": 1369}
