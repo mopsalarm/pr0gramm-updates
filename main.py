@@ -157,7 +157,8 @@ def update_json(*query):
 
     # url = github_url_for_version(version)
     # if not validate_apk_url(url):
-    url = "{}/apk/{}/{}".format("http://pr0-app.wibbly-wobbly.de", version.version, version.filename)
+    # url = "{}/apk/{}/{}".format("http://pr0-app.wibbly-wobbly.de", version.version, version.filename)
+    url = "http://apk.pr0gramm.com/" + version.filename
 
     return {
         "apk": url,
