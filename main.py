@@ -58,7 +58,7 @@ def format_version(version):
     if isinstance(version, Version):
         version = version.version
 
-    major, minor, path = (version // 1000) + 1, version // 10, version % 10
+    major, minor, path = (version // 1000), version // 10, version % 10
     return "{}.{}.{}".format(major, minor, path)
 
 
@@ -158,8 +158,7 @@ def update_json(*query):
     # url = github_url_for_version(version)
     # if not validate_apk_url(url):
     # url = "{}/apk/{}/{}".format("http://pr0-app.wibbly-wobbly.de", version.version, version.filename)
-    url = "https://apk.pr0gramm.com/" + version.filename
-
+    url = "https://apk.pr0gramm.com/pr0gramm-{}.apk".format(format_version(version))
     return {
         "apk": url,
         "version": version.version,
