@@ -54,20 +54,12 @@ if not apk_root.exists():
     apk_root.mkdir()
 
 
-def format_version(version):
+def format_version(version: int):
     if isinstance(version, Version):
         version = version.version
 
     major, minor, path = (version // 1000), version // 10, version % 10
     return "{}.{}.{}".format(major, minor, path)
-
-
-def github_url_for_version(version):
-    if isinstance(version, Version):
-        version = version.version
-
-    major, minor, path = (version // 1000), version // 10, version % 10
-    return "https://github.com/mopsalarm/Pr0/releases/download/{}.{}.{}/app-release.apk".format(major, minor, path)
 
 
 def jinja_filters():
@@ -155,9 +147,6 @@ def validate_apk_url(url):
 def update_json(*query):
     version = Version.get(*query)
 
-    # url = github_url_for_version(version)
-    # if not validate_apk_url(url):
-    # url = "{}/apk/{}/{}".format("http://pr0-app.wibbly-wobbly.de", version.version, version.filename)
     url = "https://apk.pr0gramm.com/pr0gramm-{}.apk".format(format_version(version))
     return {
         "apk": url,
@@ -261,7 +250,7 @@ def req_info_message():
                                "Zusätzlich gibt es viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback."
 
     bottle.response.set_header("Vary", "User-Agent")
-    return {"message": info_message, "endOfLife": 1369}
+    return {"message": info_message, "endOfLife": 1379}
 
 
 def extract_version_from_request(request):
