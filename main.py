@@ -250,7 +250,7 @@ def req_info_message():
                                "Zusätzlich gibt es viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback."
 
     bottle.response.set_header("Vary", "User-Agent")
-    return {"message": info_message, "endOfLife": 1379}
+    return {"message": info_message, "endOfLife": 1416}
 
 
 def extract_version_from_request(request):
