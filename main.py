@@ -243,14 +243,15 @@ def req_info_message():
         newest_version = Version.get(stable=True).version // 10
         if version <= newest_version - 2:
             if info_message:
-                info_message += ". Warum updatest du die App nicht? Gib doch mal bitte Feedback."
+                info_message += ". Warum updatest du die App nicht? Gib doch bitte Feedback."
             else:
-                info_message = "ACHTUNG: Deine Version ist ziemlich alt. " \
-                               "Gehe bitte unbedingt updaten, da deine Version sonst bald nicht mehr unterstützt wird! " \
-                               "Zusätzlich gibt es viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback."
+                info_message = "ACHTUNG: Deine Version der App ist ziemlich alt. " \
+                               "Bitte führe unbedingt ein Update durch, da diese Version bald nicht mehr unterstützt wird! " \
+                               "Es gibt viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback. " \
+                               "https://app.pr0gramm.com"
 
     bottle.response.set_header("Vary", "User-Agent")
-    return {"message": info_message, "endOfLife": 1416}
+    return {"message": info_message, "endOfLife": 1526}
 
 
 def extract_version_from_request(request):

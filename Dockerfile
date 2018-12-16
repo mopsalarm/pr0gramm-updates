@@ -1,4 +1,4 @@
-FROM python:3.7.0b4-alpine3.7
+FROM python:3.7.1-alpine3.8
 MAINTAINER Mopsalarm
 
 EXPOSE 8080
