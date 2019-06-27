@@ -145,6 +145,11 @@ def validate_apk_url(url):
 
 
 def update_json(*query):
+    # no more updates for old android versions. :/
+    android_version = bottle.request.query.get("androidVersion")
+    if android_version is not None and int(android_version) < 21:
+        return {"apk": "https://example.com", "version": 0, "versionStr": "", "changelog": []}
+    
     version = Version.get(*query)
 
     url = "https://apk.pr0gramm.com/pr0gramm-{}.apk".format(format_version(version))
@@ -251,7 +256,7 @@ def req_info_message():
                                "https://app.pr0gramm.com"
 
     bottle.response.set_header("Vary", "User-Agent")
-    return {"message": info_message, "endOfLife": 1526}
+    return {"message": info_message, "endOfLife": 1570}
 
 
 def extract_version_from_request(request):
