@@ -2,3 +2,4 @@ apks
 .idea
 *.iml
 .git
+venv
