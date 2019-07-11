@@ -152,6 +152,9 @@ def update_json(*query):
     
     version = Version.get(*query)
 
+    # cache on cloudflare.
+    bottle.response.set_header("Cache-Control", "public, max-age=60")
+
     url = "https://apk.pr0gramm.com/pr0gramm-{}.apk".format(format_version(version))
     return {
         "apk": url,
@@ -256,6 +259,7 @@ def req_info_message():
                                "https://app.pr0gramm.com"
 
     bottle.response.set_header("Vary", "User-Agent")
+    bottle.response.set_header("Cache-Control", "public, max-age=60")
     return {"message": info_message, "endOfLife": 1570}
 
 
