@@ -16,6 +16,8 @@ import peewee as pw
 import re
 import requests
 
+from pyaxmlparser import APK
+
 DOMAIN = "http://app.pr0gramm.com"
 
 # create and install database plugin
@@ -196,13 +198,10 @@ def req_upload():
 
 
 def extract_version_code(fp):
-    version_file = "assets/crashlytics-build.properties"
-    with zipfile.ZipFile(fp) as apk, apk.open(version_file) as props:
-        match = re.search(br'version_code=([0-9]+)', props.read())
-        if not match:
-            raise IOError("Could not find version in upload")
-
-        return int(match.group(1))
+    source = fp.read()
+    
+    apk = APK(source, raw=True)
+    return int(apk.version_code)
 
 
 @bottle.get("/update-manager/static/<path:path>")
