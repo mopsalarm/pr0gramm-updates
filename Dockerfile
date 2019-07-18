@@ -1,4 +1,4 @@
-FROM python:3.7.3-alpine3.9
+FROM python:3.7.4-slim-buster
 MAINTAINER Mopsalarm
 
 EXPOSE 8080
@@ -10,4 +10,4 @@ COPY . /app
 
 WORKDIR /app
 
-CMD ["python3", "-m", "bottle", "-s", "cherrypy", "-b", "0.0.0.0:8080", "main"]
+CMD ["python3", "-u", "-m", "bottle", "-s", "cherrypy", "-b", "0.0.0.0:8080", "main"]
