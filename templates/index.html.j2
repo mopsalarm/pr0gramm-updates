@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=564, user-scalable=no">
     <meta charset="utf-8" />
 
     <title>Update Manager</title>
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw=="
-          crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
 
-    <link href="/update-manager/static/style.css" rel="stylesheet"/>
+    <style>
+        h1, h2, h3 {
+            margin-top: 1em;
+        }
+
+        body, input {
+            font-family: 'Lato', sans-serif;
+        }
+
+        table th, table td {
+            white-space: nowrap;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,22 +33,40 @@
     <h1>Update manager</h1>
 
     <h2>Info message</h2>
+
     <form action="/update-manager/info-message" method="POST">
-        <p>
-            Write a short message here to dispaly to all users. The message is displayed every time the
-            user openes the app.
-        </p>
-        <p>
-            Keep this text field emtpy to not show any message to the user.
+        <p class="form-group">
+            <label for="message">
+                Write a short message here to display to all users. The message is displayed every time the
+                user opens the app. Keep this text field emtpy to not show any message to the user.
+            </label>
+
+            <input id="message" name="message"
+                   class="form-control" {{ {'value':info_message.message}|xmlattr }} />
         </p>
 
-        <p><input name="message" class="input--fullwidth" {{ {'value':info_message}|xmlattr }} /></p>
+        <p class="form-group">
+            <label for="messageId">
+                Optional Id to show this message only once:
+            </label>
+
+            <input id="messageId" name="messageId"
+                   class="form-control" {{ {'value':info_message.message_id}|xmlattr }} />
+        </p>
+
+        <p class="form-group">
+            <input class="btn btn-primary" type="submit" value="Save">
+        </p>
 
         <p>See generated file <a href="/info-message.json">here</a></p>
-
     </form>
 
     <h2>Available versions</h2>
+
+    <p>
+        See the generated file for <a href="/updates/stable/update.json">stable</a>
+        and for <a href="/updates/beta/update.json">beta</a>.
+    </p>
 
     <table class="table table-striped">
         <tr>
@@ -48,37 +78,41 @@
         </tr>
         {% for version in versions %}
             {% set classes %}
-                {{ "success" if version.stable }}
-                {{ "warning" if version.beta and not version.stable }}
+                {{ "table-success" if version.stable }}
+                {{ "table-warning" if version.beta and not version.stable }}
+                {{ "table-danger" if version.version == info_message.end_of_life_version }}
             {% endset %}
 
             <tr class="{{ classes|replace('\n', ' ')|trim }}">
-                <td>{{ version.version|version_format }}</td>
-                <td>{{ version.created|humanize }}</td>
-                <td>{{ version.size|filesizeformat }}</td>
-                <td>
+                <td class="align-middle">{{ version.version|version_format }}</td>
+                <td class="align-middle">{{ version.created|humanize }}</td>
+                <td class="align-middle">{{ version.size|filesizeformat }}</td>
+                <td class="align-middle">
                     <a href="/update-manager/version/{{ version.version }}/set/stable">St</a>
                     <a href="/update-manager/version/{{ version.version }}/set/beta">Be</a>
+                    <a href="/update-manager/version/{{ version.version }}/set/eol">Eol</a>
                 </td>
-                <td>
+                <td class="align-middle">
                     <form action="/update-manager/version/{{ version.version }}/notice" method="POST">
-                        <input name="notice" class="input--fullwidth" {{ {'value':version.notice}|xmlattr }} />
+                        <input name="notice" class="form-control" {{ {'value':version.notice}|xmlattr }} />
                     </form>
                 </td>
             </tr>
         {% endfor %}
     </table>
 
-    <h2>Generated update.json file</h2>
-    <ul>
-        <li><a href="/stable/update.json">/stable/update.json</a></li>
-        <li><a href="/beta/update.json">/beta/update.json</a></li>
-    </ul>
-
     <h2>Upload new version</h2>
     <form action="/update-manager/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="apk"/>
-        <input type="submit" value="Upload apk"/>
+        <div class="form-group">
+            <div class="custom-file">
+                <input id="apkFileInput" type="file" name="apk" class="custom-file-input"/>
+                <label class="custom-file-label" for="apkFileInput">Choose an apk file</label>
+            </div>
+        </div>
+
+        <p class="form-group">
+            <input type="submit" class="btn btn-primary" value="Upload apk"/>
+        </p>
     </form>
 </div>
 

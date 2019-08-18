@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
 
 import datetime
+import functools
+import os
 import pathlib
+import re
 import threading
-import zipfile
 from contextlib import closing
 
 import arrow
 import bottle
 import bottle_peewee
 import cachetools as cachetools
-import functools
-import os
 import peewee as pw
-import re
 import requests
-
 from pyaxmlparser import APK
 
 DOMAIN = "http://app.pr0gramm.com"
@@ -26,7 +24,7 @@ bottle.install(db)
 
 
 class Version(pw.Model):
-    version = pw.PrimaryKeyField(unique=True, db_column='id')
+    version = pw.AutoField(unique=True, column_name='id')
     created = pw.DateTimeField()
     filename = pw.TextField()
     stable = pw.BooleanField(default=False)
@@ -44,11 +42,18 @@ class Version(pw.Model):
         database = db.proxy
 
 
-# create table for database plugin
-db.database.create_tables([Version], safe=True)
+class InfoMessage(pw.Model):
+    message = pw.TextField(default=None, null=True)
+    message_id = pw.TextField(default=None, null=True)
+    end_of_life_version = pw.IntegerField(default=None, null=True)
 
-# we just keep this in memory
-info_message_string = None
+    class Meta(object):
+        database = db.proxy
+
+
+# create table for database plugin
+db.database.create_tables([Version, InfoMessage], safe=True)
+
 
 # create apk folder
 apk_root = pathlib.Path("apks")
@@ -75,9 +80,9 @@ def jinja_filters():
     return locals()
 
 
+
 template_settings = {"filters": jinja_filters()}
-render_view = functools.partial(bottle.jinja2_view,
-                                template_settings=template_settings)
+render_view = functools.partial(bottle.jinja2_view, template_settings=template_settings)
 
 
 @bottle.get("/update-manager/")
@@ -88,7 +93,7 @@ def req_index():
 
     return {
         "versions": versions,
-        "info_message": info_message_string,
+        "info_message": get_info_message(),
         "most_recent_version": most_recent_version,
     }
 
@@ -123,10 +128,30 @@ def req_version_set_stable(version_code):
     return bottle.redirect("/update-manager/")
 
 
+@bottle.get("/update-manager/version/<version_code:int>/set/eol")
+def req_version_set_eol(version_code):
+    info = get_info_message()
+
+    if info.end_of_life_version == version_code:
+        info.end_of_life_version = None
+    else:
+        info.end_of_life_version = version_code
+
+    info.save()
+
+    return bottle.redirect("/update-manager/")
+
+
 @bottle.post("/update-manager/info-message")
 def req_set_info_message():
-    global info_message_string
-    info_message_string = bottle.request.forms.getunicode("message")
+    message = bottle.request.forms.getunicode("message")
+    message_id = bottle.request.forms.getunicode("messageId")
+
+    info = get_info_message()
+    info.message = message or None
+    info.message_id = message_id or None
+    info.save()
+
     return bottle.redirect("/update-manager/")
 
 
@@ -176,7 +201,7 @@ def req_upload():
 
     with closing(upload.file) as upload_file:
         # get the version_code from the zip file
-        version_code = extract_version_code(upload_file)
+        version_code = extract_apk_version_code(upload_file)
 
         # check if this version already exists
         if Version.filter(version=version_code).exists():
@@ -197,28 +222,28 @@ def req_upload():
     return bottle.redirect("/update-manager/")
 
 
-def extract_version_code(fp):
+def extract_apk_version_code(fp):
     source = fp.read()
-    
-    apk = APK(source, raw=True)
-    return int(apk.version_code)
+    return int(APK(source, raw=True).version_code)
 
 
-@bottle.get("/update-manager/static/<path:path>")
-def req_static(path):
-    root = pathlib.Path(__file__).parent / "static"
-    return bottle.static_file(path, str(root))
+# @bottle.get("/update-manager/static/<path:path>")
+# def req_static(path):
+#     root = pathlib.Path(__file__).parent / "static"
+#     return bottle.static_file(path, str(root))
 
 
 # public stuff
 
 
 @bottle.get("/beta/update.json")
+@bottle.get("/updates/beta/update.json")
 def req_beta_update_json():
     return update_json(Version.beta)
 
 
 @bottle.get("/stable/update.json")
+@bottle.get("/updates/stable/update.json")
 def req_beta_update_json():
     return update_json(Version.stable)
 
@@ -241,31 +266,35 @@ def req_apk(version_code):
 
 @bottle.get("/info-message.json")
 def req_info_message():
-    # get static message
-    info_message = info_message_string
+    info = get_info_message()
+    message = info.message
 
     version = extract_version_from_request(bottle.request)
-    if version is not None:
-        version = version // 10
-        newest_version = Version.get(stable=True).version // 10
-        if version <= newest_version - 2:
-            if info_message:
-                info_message += ". Warum updatest du die App nicht? Gib doch bitte Feedback."
-            else:
-                info_message = "ACHTUNG: Deine Version der App ist ziemlich alt. " \
-                               "Bitte führe unbedingt ein Update durch, da diese Version bald nicht mehr unterstützt wird! " \
-                               "Es gibt viele Bugfixes und neue Features! Falls dir was am Herzen liegt, gib doch bitte Feedback. " \
-                               "https://app.pr0gramm.com"
+    if not message and version is not None:
+        # check if the user uses a really old version
+        if Version.get(stable=True).version - version > 20:
+            message = "Die Version der App ist ziemlich alt. " \
+                      "Bitte führe unbedingt ein Update durch, da diese Version bald nicht mehr unterstützt wird! " \
+                      "https://app.pr0gramm.com"
 
     bottle.response.set_header("Vary", "User-Agent")
     bottle.response.set_header("Cache-Control", "public, max-age=60")
-    return {"message": info_message, "endOfLife": 1570}
+
+    message_id = "info:" + info.message_id if info.message_id else None
+
+    return {
+        "message": message,
+        "messageId": message_id,
+        "endOfLife": info.end_of_life_version,
+    }
 
 
 def extract_version_from_request(request):
-    agent = request.get_header("User-Agent", "")
+    agent = request.get_header("User-Agent", default="")
     match = re.match(r"pr0gramm-app/v([0-9]+)", agent)
-    if match is None:
-        return None
+    return int(match.group(1)) if match else None
 
-    return int(match.group(1))
+
+def get_info_message() -> InfoMessage:
+    info, _ = InfoMessage.get_or_create(id=1)
+    return info

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-exec python3 -m bottle --debug --reload main
+exec python3 -u -m bottle -s waitress --debug main
 
