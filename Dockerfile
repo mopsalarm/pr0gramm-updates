@@ -10,4 +10,4 @@ COPY . /app
 
 WORKDIR /app
 
-CMD ["python3", "-u", "-m", "bottle", "-s", "cherrypy", "-b", "0.0.0.0:8080", "main"]
+CMD ["python3", "-u", "-m", "bottle", "-s", "waitress", "-b", "0.0.0.0:8080", "main"]
