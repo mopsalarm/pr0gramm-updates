@@ -182,7 +182,7 @@ def update_json(*query):
     # cache on cloudflare.
     bottle.response.set_header("Cache-Control", "public, max-age=60")
 
-    url = "https://apk.pr0gramm.com/pr0gramm-{}.apk".format(format_version(version))
+    url = "{}/apk/{}/{}".format(DOMAIN, version.version, version.filename)
     return {
         "apk": url,
         "version": version.version,
