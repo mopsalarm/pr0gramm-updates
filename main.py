@@ -16,7 +16,7 @@ import peewee as pw
 import requests
 from pyaxmlparser import APK
 
-DOMAIN = "http://app.pr0gramm.com"
+DOMAIN = "https://app.pr0gramm.com"
 
 # create and install database plugin
 db = bottle_peewee.PeeweePlugin("sqlite:///apks/_updates.db")
