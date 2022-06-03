@@ -1,5 +1,5 @@
 arrow==0.7.0
-bottle==0.12.17
+bottle==0.12.20
 bottle-peewee==0.1.5
 cachetools==2.0.0
 certifi==2019.6.16
